@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html class="full" lang="en">
+<!-- Make sure the <html> tag is set to the .full CSS class. Change the background image in the full.css file. -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Πλατφορμα Διδασκαλίας Αρχαίων Ελληνικων</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="/css/bootstrap.css" rel="stylesheet" type="text/css">
+
+    <!-- Custom CSS -->
+    <link href="/css/full.css" rel="stylesheet" type="text/css">
+    <link href="/js/parsley/src/parsley.css" rel="stylesheet" type="text/css">
+ 
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.7/es5-shim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.7/es5-sham.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/json3/3.3.2/json3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/es6-shim/0.34.2/es6-shim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/es6-shim/0.34.2/es6-sham.min.js"></script>
+    <script src="/js/moment-with-locales.min.js"></script>
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+    <!-- Include Font Awesome. -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="/js/Trumbowyg-master/dist/ui/trumbowyg.min.css">
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">Εκμάθηση Αρχαίων Ελληνικών</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="#">{{ username }}</a>
+                    </li>
+                    <li>
+                        <a href="/admin">Μαθήματα</a>
+                    </li>
+                    <li>
+                        <a href="/admin/tests">Ασκήσεις</a>
+                    </li>
+                    <li>
+                        <a href="/logout">Έξοδος</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Put your page content here! -->
+    <div class="body-container">
+        {% if function is defined and function == "list" %}
+        <div class="row" style="top:10%">
+            <div class="col-sm-12" style="text-align:center">
+                <div style="background:white; width: 80%; margin: 0 auto;padding:10px; border-radius: 15px;">                    
+                    <div class="form-group">
+                        <p class="alert" id="feedback-message"> </p>
+                        <!-- <i class="fa fa-exclamation-triangle" aria-hidden="true" style="display:hidden"></i> -->
+                    </div>
+                    <div style="text-align:center">
+                        <h1> Διαχείριση Μαθημάτων </h1>
+                    </div>
+                    <hr/>
+                    <div style="width: 70%; text-align:center; margin: 0 auto; padding-bottom: 40px;">
+                        <table id="course-list" class="display" cellspacing="0">
+                        <thead>
+                            <tr>
+                            <th>Επεξεργασία</th>
+                            <th> Τίτλος Μαθήματος </th>
+                            <th> Ημερομηνία δημιουργίας μαθήματος</th>
+                            <th> Τελευταία ενημέρωση μαθήματος</th>
+                            <th> Βαθμοί </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for course in courses %}
+                            <tr> 
+                            <td> <a href="/admin/edit/{{ course['id'] }}"> <i class="fa fa-pencil" aria-hidden="true"></i> </a> </td>
+                            <td> {{ course['title'] }} </td>
+                            <td> {{ course['lesson_creation_timestamp']|date  }} </td>
+                            <td> {{ course['lesson_update_timestamp']|date  }} </td>
+                            <td> <a href="/admin/grades/{{ course['id'] }}"><i class="fa fa-graduation-cap" aria-hidden="true"></i></a> </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                        </table>
+                    </div>
+                    <div style="padding-bottom: 40px;">
+                        <a href="/admin/new"><i class="fa fa-plus" aria-hidden="true"></i> Δημιουργία νέου μαθήματος</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% elseif function is defined and function == "edit" %}
+        <div class="row" style="top:10%">
+            <div class="col-sm-12" style="text-align:center; border-radius: 15px;">
+                <div style="background:white;max-width: 80%; margin: 0 auto;padding:10px; border-radius: 15px;">
+                    <div class="form-group">
+                        <p class="alert" id="feedback-message"> </p>
+                    </div>
+                    <div style="text-align:center">
+                        <h1> Επεξεργασία Μαθήματος</h1>
+                    </div>
+                    <form  method="POST" role="form" id="edit-course-form" class="form-signin" data-parsley-validate="" style="max-width:80%;">
+                        <div class="form-group">
+                            <label class="control-label" for="course-title"> Τίτλος μαθήματος </label>
+                            <input type="text" name="course-title" id="course-title" class="form-control" value="{{ course_data['title'] }}" required/>
+                        </div>
+                        <input type="hidden" name="course-id" id="course-id" class="form-control" value="{{ course_data['id'] }}" required/>
+                        <label class="control-label" for="course-title"> Κείμενο μαθήματος </label>
+                        <textarea name="course-text" id="edit-lesson" required>
+                            {{ course_data['text'] }}
+                        </textarea>
+                            <div class="form-group" style="width:100px; float:left;">
+                                <button  style="float:left;" id="new-course-btn" type="submit" name="submit" class="btn btn-info btn-block">
+                                    <span id="new-course-btn-txt" >Υποβολή</span>
+                                </button>
+                            </div>
+                            <div class="form-group" style="width:100px; float:left; margin-left:10px;">
+                                <button style="float:left;" id="delete-course-btn" type="button" class="btn btn-danger">Διαγραφή</button>
+                            </div>
+                            <div class="form-group" style="width:100px;height:40px">
+                            </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="row" style="top:10%">
+            <div class="col-sm-12" >
+                <div style="background:white;max-width: 80%; margin: 0 auto;padding:10px; border-radius: 15px;">
+                <div style="text-align:center">
+                    <h1> Δημιουργία Μαθήματος</h1>
+                </div>
+                <form method="POST" role="form" id="new-course-form" class="form-signin" data-parsley-validate="" style="max-width:80%;">
+                    <div class="form-group">
+                        <label class="control-label" for="course-title"> Τίτλος μαθήματος </label>
+                        <input type="text" name="course-title" id="course-title" class="form-control" required/>
+                    </div>
+                    <label class="control-label" for="course-title"> Κείμενο μαθήματος </label>
+                    <textarea name="course-text" id="edit-lesson" required></textarea>
+                    <div class="form-group" style="width:100px;">
+                        <button id="new-course-btn" type="submit" name="submit" class="btn btn-info btn-block">
+                            <span id="new-course-btn-txt" >Υποβολή</span>
+                        </button>
+                    </div>
+                </form>
+                
+                </div>
+            </div>
+            
+        </div>
+        {% endif %}
+    </div>
+    
+    <script src="/js/jquery.js"></script>
+    <script src="/js/parsley/dist/parsley.min.js"></script>
+    <script src="/js/parsley/dist/i18n/el.js"></script>
+    
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js"></script>
+    <!-- Bootstrap select -->
+    <link rel="stylesheet" href="/js/bootstrap-select/dist/css/bootstrap-select.min.css" type="text/css">
+    <script src="/js/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
+    <script src="/js/bootstrap-select/dist/js/i18n/defaults-el_GR.js"></script>
+    <script src="/js/Trumbowyg-master/dist/trumbowyg.min.js"></script>
+    <script src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            
+            {% if error is defined and error == true %}
+                $("#feedback-message").show();
+                $("#feedback-message").html('<i class="fa fa-exclamation-triangle" aria-hidden="true" style="display:hidden"></i> {{ error }}');
+                $("#feedback-message").addClass("alert-danger");
+            {% elseif error is defined and error == false %}
+                $("#feedback-message").show();
+                $("#feedback-message").html('<i class="fa fa-thumbs-up" aria-hidden="true"></i> {{ error }}');
+                $("#feedback-message").addClass("alert-success");
+            {% endif %}
+        
+            {% if function is defined and function == "list" %}
+            $('#course-list').DataTable({
+                "columnDefs": [
+                    { "type": "timeStamp", "targets": 2 }
+                  ]
+            });
+            {% endif %}
+            
+            {% if function is defined and function == "new" %}
+            $(function () {
+                var form_id = '#new-course-form';
+                $(form_id).parsley().on('field:validated', function() {
+                var ok = $('.parsley-error').length === 0;
+                $('.bs-callout-info').toggleClass('hidden', !ok);
+                $('.bs-callout-warning').toggleClass('hidden', ok);
+              })
+              .on('#login-form:submit', function() {
+                return false; 
+              });
+            });
+            {% endif %}
+            
+            $("#new-course-form").submit(function(e){
+                var url = "/course/new";
+                $.ajax({
+                   type: "POST",
+                   url: url,
+                   dataType: "json",
+                   data: $("#new-course-form").serialize(),
+                   success: function(data)
+                   {
+                       if (data.error == true){
+                           alert("Error");
+                       }else{
+                           alert("Success");
+                       }
+                   }
+                 });
+                 e.preventDefault(); // avoid to execute the actual submit of the form.
+            });
+
+            $("#edit-course-form").submit(function(e){
+                $("#feedback-message").hide();
+                $("#feedback-message").html();
+                $("#feedback-message").removeClass('alert-danger');
+                $("#feedback-message").removeClass('alert-success');
+                $("#feedback-message").removeClass('alert-warning');
+                var url = "/course/update";
+                $.ajax({
+                   type: "POST",
+                   url: url,
+                   dataType: "json",
+                   data: $("#edit-course-form").serialize(),
+                   success: function(data)
+                   {
+                       if (data.error == true){
+                           $("#feedback-message").show();
+                           $("#feedback-message").html('<i class="fa fa-exclamation-triangle" aria-hidden="true"></i> '+data.message);
+                           $("#feedback-message").addClass("alert-danger");
+                       }else{
+                           $("#feedback-message").show();
+                           $("#feedback-message").html('<i class="fa fa-thumbs-up" aria-hidden="true"></i> '+data.message);
+                           $("#feedback-message").addClass("alert-success");
+                       }
+                   }
+                 });
+                 e.preventDefault(); // avoid to execute the actual submit of the form.
+            });
+
+        });
+        
+        $("#delete-course-btn").on('click', function(e){
+            $("#feedback-message").hide();
+            $("#feedback-message").html();
+            $("#feedback-message").removeClass('alert-danger');
+            $("#feedback-message").removeClass('alert-success');
+            $("#feedback-message").removeClass('alert-warning');
+            var url = "/course/delete";
+            $.ajax({
+               type: "POST",
+               url: url,
+               dataType: "json",
+               data: $("#edit-course-form").serialize(),
+               success: function(data)
+               {
+                   if (data.error == true){
+                       $("#feedback-message").show();
+                       $("#feedback-message").html('<i class="fa fa-exclamation-triangle" aria-hidden="true"></i> '+data.message);
+                       $("#feedback-message").addClass("alert-danger");
+                   }else{
+                       $("#feedback-message").show();
+                       $("#feedback-message").html('<i class="fa fa-thumbs-up" aria-hidden="true"></i> Το μάθημα διαγράφηκε επιτυχώς.');
+                       $("#feedback-message").addClass("alert-success");
+                       $("#course-title").prop('disabled', true);
+                       $("#course-title").prop('disabled', true);
+                       $("#edit-lesson").prop('disabled', true);
+                       $('button').prop('disabled', true);
+                       $("#edit-lesson").attr("disabled","disabled");
+                   }
+               }
+             });
+        });
+            
+            
+        $(function() {
+              $('#edit-lesson').trumbowyg();
+          });
+        
+    </script>
+
+</body>
+
+</html>

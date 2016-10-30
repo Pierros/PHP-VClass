@@ -1,0 +1,267 @@
+<?php
+
+require __DIR__ . '/../src/Bootstrap.php';
+
+?>
+
+<!DOCTYPE html>
+<html class="full" lang="en">
+<!-- Make sure the <html> tag is set to the .full CSS class. Change the background image in the full.css file. -->
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Πλατφορμα Διδασκαλίας Αρχαίων Ελληνικων</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="../css/full.css" rel="stylesheet">
+    <link href="../js/parsley/src/parsley.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.7/es5-shim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.7/es5-sham.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/json3/3.3.2/json3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/es6-shim/0.34.2/es6-shim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/es6-shim/0.34.2/es6-sham.min.js"></script>
+    <script src="../js/moment-with-locales.min.js"></script>
+
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Εκμάθηση Αρχαίων Ελληνικών</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="#">Σχετικά με την σελίδα</a>
+                    </li>
+                    <li>
+                        <a href="#">Επικοινωνία</a>
+                    </li>
+                    <li>
+                        <a href="#sign_in">Εισοδός</a>
+                    </li>
+                    <li>
+                        <a href="#sign_up">Εγγραφή</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Put your page content here! -->
+    <div class="body-container">
+        <div class="row">
+            <div class="col-sm-12" id="signin-col">
+            
+                <a name="login-form"></a> 
+                <div class="panel-body">
+                    <form method="POST" action="https://www.dithen.com/filemanager/index.php?login=1" role="form" id="login-form" class="form-signin" data-parsley-validate="">
+                        <div class="form-group">
+                            <h2>Συνδεθείτε</h2>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="signupEmail">Email</label>
+                            <input id="email" name="email" maxlength="50" class="form-control" data-parsley-trigger="change" required="" type="email" >
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="signupPassword">Κωδικός Πρόσβασης</label>
+                            <input id="password" name="password" maxlength="25" class="form-control" length="40" required type="password">
+                            
+                        </div>
+                        <input type="hidden" name="submit" value="ie_enter_fix">
+                        <input type="hidden" name="usrmgt" value="1"/>
+                        
+                        <div class="form-group">
+                            <a id="password-recovery" class="left" href="#">Ξέχασα τον κωδικό μου</a>
+                        </div>
+                        <div class="form-group">
+                            <button id="login-btn" type="submit" name="submit" class="btn btn-info btn-block">
+                                <span id="login-btn-spinner" class="glyphicon glyphicon-refresh glyphicon-refresh-animate spinning" style="display:none"></span> 
+                                <span id="login-btn-txt" >Είσοδος</span>
+                            </button>
+                        </div>
+                        <div class="form-group">
+                            <a id="account-registration" class="right" href="#sign_up">Δημιουργία Λογαριασμού</a>
+                        </div>
+                        <div class="form-group">
+                            <div class="alert alert-danger" style="display:none" id="login-error">
+                            </div>
+                        </div>
+                        </form>
+                </div>
+            </div>
+            <div class="col-sm-12" id="signup-col">
+                <a name="signup-form"></a> 
+                <div class="panel-body">
+                    <form method="POST" action="https://www.dithen.com/filemanager/index.php?signup=1" role="form" class="form-signup" id="signup-form" data-parsley-validate="">
+                        <div class="row">
+                            <div class="form-group">
+                                <h2>Δημιουργία Λογαριασμού</h2>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label" for="signupEmail">Email</label>
+                                    <input name="email" id="email" type="email" maxlength="50" class="form-control" data-parsley-trigger="change" required="" >
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label" for="signupPassword">Κωδικός Πρόσβαση</label>
+                                    <input name="password" id="password-signup" type="password" maxlength="25" class="form-control" length="40" required type="password">
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label" for="signupPasswordagain">Επιβεβαίωση Κωδικού Πρόσβασης</label>
+                                    <input name="password2" id="password-signup-2" type="password" maxlength="25" class="form-control" required data-parsley-equalto="#password-signup">
+                                </div>
+                                <input type="hidden" name="agreeterms" />
+                                <input type="hidden" name="usrmgt" value="1" />
+                                <div class="form-group">
+                                    <label class="control-label" for="singup-role">Ρόλος</label>
+                                    <select class="selectpicker form-control" required="" >
+                                      <option value=""></option>
+                                      <option value="student">Μαθητής</option>
+                                      <option value="teacher">Καθηγητής</option>
+                                    </select>
+
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label" for="first-name">Όνομα</label>
+                                    <input name="first-name" id="first-name" type="text" class="form-control" required >
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label" for="last-name">Επώνυμο</label>
+                                    <input name="last-name" id="last-name" type="text" class="form-control" required >
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label"  for="signup-dob">Ημερομηνία Γέννησης</label>
+                                    <div class='input-group date' id='datetimepicker1'>
+                                        <input name="signup-dob" id="signup-dob" type='text' class="form-control" required="" data-parsley-errors-container="#dob-error" data-parsley-date />
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                    <span id="dob-error"></span>
+                                </div>
+                                <div class="form-group" style="margin-top:40px;">
+                                    <button id="signup-btn" type="submit" class="btn btn-info btn-block">
+                                        <span id="signup-btn-spinner" class="glyphicon glyphicon-refresh glyphicon-refresh-animate spinning" style="display:none"></span> 
+                                        <span id="signup-btn-txt" >Δημιουργία</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <p class="form-group">Η δημιουργία λογαριασμού προϋποθέτει ότι συμφωνείτε με τους <a href="#">Όρους Χρήσης</a>.</p>
+                            <div class="form-group">
+                                <div class="alert" style="display:none" id="signup-message"> </div>
+                            </div>
+                        </div>
+                        
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- jQuery -->
+    <script>
+     window.ParsleyConfig = window.ParsleyConfig || {};
+
+     window.ParsleyConfig.validators = window.ParsleyConfig.validators || {};
+
+     window.ParsleyConfig.validators.date = {
+            fn: function (value) {
+                return /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/.test(value);
+            },
+            priority: 256
+        };
+    </script>
+    <script src="../js/jquery.js"></script>
+    <script src="../js/parsley/dist/parsley.min.js"></script>
+    <script src="../js/parsley/dist/i18n/el.js"></script>
+    
+    <!-- Bootstrap Core JavaScript -->
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js"></script>
+    <!-- Bootstrap select -->
+    <link rel="stylesheet" href="../js/bootstrap-select/dist/css/bootstrap-select.min.css">
+    <script src="../js/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
+    <script src="../js/bootstrap-select/dist/js/i18n/defaults-el_GR.js"></script>
+    <script>
+        $(document).ready(function(){
+            var currentValue = window.location.hash.substr(1);
+            if (currentValue == "sign_in"){
+                hide_signup();
+            }
+
+            if (currentValue == "sign_up"){
+                hide_signin();
+            }
+
+            $("a[href='#sign_up']").click(function(){
+                hide_signin();
+            });
+
+            $("a[href='#sign_in']").click(function(){
+                hide_signup();
+            });
+
+            $(function () {
+                $('#datetimepicker1').datetimepicker({
+                    format: 'DD/MM/YYYY'
+                });
+            });
+
+            $(function () {
+              $('#login-form').parsley().on('field:validated', function() {
+                var ok = $('.parsley-error').length === 0;
+                $('.bs-callout-info').toggleClass('hidden', !ok);
+                $('.bs-callout-warning').toggleClass('hidden', ok);
+              })
+              .on('form:submit', function() {
+                return false; // Don't submit form for this demo
+              });
+            });
+        });
+        
+        function hide_signup(){
+            $("#signin-col").show();
+            $("#signup-col").hide();
+        }
+
+        function hide_signin(){
+            $("#signin-col").hide();
+            $("#signup-col").show();
+        }
+        
+    </script>
+
+</body>
+
+</html>

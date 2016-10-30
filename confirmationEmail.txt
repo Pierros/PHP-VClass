@@ -1,0 +1,11 @@
+Dear $firstName $lastName,
+
+Thank you for signing up to the virtual class application!
+Please confirm your email address by clicking the following link:
+
+http://ec2-54-197-15-89.compute-1.amazonaws.com/activate?x=$activation&y=$userid
+
+We look forward to welcoming you to our service!
+
+Kind regards,
+Petros Anaipakos

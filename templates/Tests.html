@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html class="full" lang="en">
+<!-- Make sure the <html> tag is set to the .full CSS class. Change the background image in the full.css file. -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Πλατφορμα Διδασκαλίας Αρχαίων Ελληνικων</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="/css/bootstrap.css" rel="stylesheet" type="text/css">
+
+    <!-- Custom CSS -->
+    <link href="/css/full.css" rel="stylesheet" type="text/css">
+    <link href="/js/parsley/src/parsley.css" rel="stylesheet" type="text/css">
+ 
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.7/es5-shim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.7/es5-sham.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/json3/3.3.2/json3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/es6-shim/0.34.2/es6-shim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/es6-shim/0.34.2/es6-sham.min.js"></script>
+    <script src="/js/moment-with-locales.min.js"></script>
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+    <!-- Include Font Awesome. -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="/js/Trumbowyg-master/dist/ui/trumbowyg.min.css">
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">Εκμάθηση Αρχαίων Ελληνικών</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="#">{{ username }}</a>
+                    </li>
+                    <li>
+                        <a href="/admin">Μαθήματα</a>
+                    </li>
+                    <li>
+                        <a href="/admin/tests">Ασκήσεις</a>
+                    </li>
+                    <li>
+                        <a href="/logout">Έξοδος</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Put your page content here! -->
+    <div class="body-container">
+        
+        <div class="row" style="top:10%">
+            {% if function is not defined or function == "list" %}
+            <div class="col-sm-12" style="text-align:center; margin-bottom:30px;">
+                <div style="background:white; width: 80%; margin: 0 auto;padding:10px; border-radius: 15px;">                    
+                    <div class="form-group">
+                        <p class="alert" id="feedback-message"> </p>
+                        <!-- <i class="fa fa-exclamation-triangle" aria-hidden="true" style="display:hidden"></i> -->
+                    </div>
+                    <div style="text-align:center">
+                        <h1> Διαχείριση Ασκήσεων </h1>
+                    </div>
+                    <hr/>
+                    <div style="width: 70%; text-align:center; margin: 0 auto; padding-bottom: 40px;">
+                        <table id="course-list" class="display" cellspacing="0">
+                        <thead>
+                            <tr>
+                            <th> Επεξεργασία</th>
+                            <th> Οδηγίες </th>
+                            <th> Ερώτηση </th>
+                            <th> Τελευταία ενημέρωση ερώτησης </th>
+                            <th> Τύπος ερώτησης </th>
+                            <th> Μάθημα </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for question in questions %}
+                            <tr> 
+                            {% if question['qtype'] == "mc" %}
+                            <td> <a href="/admin/tests/edit/{{ question['id'] }}"> <i class="fa fa-pencil" aria-hidden="true"></i> </a> </td>
+                            {% elseif question['qtype'] == "binary" %}
+                            <td> <a href="/admin/tests/editbinary/{{ question['id'] }}"> <i class="fa fa-pencil" aria-hidden="true"></i> </a> </td>
+                            {% endif %}
+                            <td> {{ question['instructions'] }} </td>
+                            <td> {{ question['q_title']  }} </td>
+                            <td> {{ question['question_updated_timestamp']|date  }} </td>
+                            {% if question['qtype'] == "mc" %}
+                            <td><span title="Πολλαπλής επιλογής"><i class="fa fa-list" aria-hidden="true"></i></span></td>
+                            {% elseif question['qtype'] == "binary" %}
+                            <td><span title="Σωστού/λάθους"><i class="fa fa-check-square-o" aria-hidden="true"></i></span></td>
+                            {% endif %}
+                            <td> <a href="/admin/edit/{{ question['lesson_id'] }}"> {{ question['lesson'] }} </a> </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                        </table>
+                    </div>
+                    <div style="padding-bottom: 40px;">
+                        <a href="/admin/tests/new"><i class="fa fa-plus" aria-hidden="true"></i> Δημιουργία νέας άσκησης πολλαπλής επιλογής</a> 
+                        <a style="margin-left:10px;" href="/admin/tests/newbinary"><i class="fa fa-plus" aria-hidden="true"></i> Δημιουργία νέας άσκησης σωστού/λάθους</a>
+                    </div>
+                </div>
+            </div>
+            {% elseif function is defined and function == "new" %}
+            <div class="col-sm-12" >
+                <div style="background:white;max-width: 60%; margin: 0 auto;padding:10px; border-radius: 15px;">
+                <div style="text-align:center">
+                    <h1> Δημιουργία Άσκησης Πολλαπλής Επιλογής</h1>
+                </div>
+                <hr/>
+                <form method="POST" role="form" id="new-question-form" class="form-signin" data-parsley-validate="" style="max-width:80%;">
+                    <div class="form-group">
+                        <label class="control-label" for="question-instructions"> Οδηγίες </label>
+                        <input type="text" name="question-instructions" id="question-instructions" class="form-control" required/>
+                        <input type="hidden" name="question-type" value="multi"> 
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="question-title"> Ερώτηση </label>
+                        <input type="text" name="question-title" id="question-title" class="form-control" required/>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="correct-answer"> Σωστή απάντηση </label>
+                        <input type="text" name="correct-answer" class="form-control" required/> <br/>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="course-title"> Λάθος απάντήσεις </label>
+                        <input type="text" name="wrong-answer[]" class="form-control" required/> <br/>
+                        <input type="text" name="wrong-answer[]" class="form-control"/> <br/>
+                        <input type="text" name="wrong-answer[]" class="form-control"/> <br/>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="correct-answer"> Μάθημα:  </label>
+                        <select name="course_id">
+                            {% for course in courses %}
+                            <option value="{{ course['id'] }}"> {{ course['title'] }} </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group" style="width:100px;">
+                        <button id="new-course-btn" type="submit" name="submit" class="btn btn-info btn-block">
+                            <span id="new-course-btn-txt" >Υποβολή</span>
+                        </button>
+                    </div>
+                </form>
+                
+                </div>
+            </div>
+            {% elseif function is defined and function == "newbinary" %}
+            <div class="col-sm-12" >
+                <div style="background:white;max-width: 60%; margin: 0 auto;padding:10px; border-radius: 15px;">
+                <div class="form-group">
+                    <p class="alert" id="feedback-message"> </p>
+                </div>
+                <div style="text-align:center">
+                    <h1> Δημιουργία Άσκησης Σωστού/Λάθους</h1>
+                </div>
+                <hr/>
+                <form method="POST" role="form" id="new-binary-question-form" class="form-signin" data-parsley-validate="" style="max-width:80%;">
+                    <div class="form-group">
+                        <label class="control-label" for="question-instructions"> Οδηγίες </label>
+                        <input type="text" name="question-instructions" id="question-instructions" class="form-control" required/>
+                        <input type="hidden" name="question-type" value="binary"> 
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="question-title"> Ερώτηση </label>
+                        <input type="text" name="question-title" id="question-title" class="form-control" required/>
+                    </div>
+                    <div class="form-group">
+                        <input type="radio" name="correctness" value="1">Σωστό
+                        <input type="radio" name="correctness" value="0">Λάθος
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="correct-answer"> Μάθημα:  </label>
+                        <select name="course_id">
+                            {% for course in courses %}
+                            <option value="{{ course['id'] }}"> {{ course['title'] }} </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group" style="width:100px;">
+                        <button id="new-course-btn" type="submit" name="submit" class="btn btn-info btn-block">
+                            <span id="new-course-btn-txt" >Υποβολή</span>
+                        </button>
+                    </div>
+                </form>
+                
+                </div>
+            </div>
+            {% elseif function is defined and function == "edit" %}
+            <div class="col-sm-12" >
+                <div style="background:white;max-width: 60%; margin: 0 auto;padding:10px; border-radius: 15px;">
+                <div class="form-group">
+                    <p class="alert" id="feedback-message"> </p>
+                    <!-- <i class="fa fa-exclamation-triangle" aria-hidden="true" style="display:hidden"></i> -->
+                </div>
+                <div style="text-align:center">
+                    <h1>Επεξεργασία Άσκησης</h1>
+                </div>
+                <hr/>
+                <form method="POST" role="form" id="edit-question-form" class="form-signin" data-parsley-validate="" style="max-width:80%;">
+                    <div class="form-group">
+                        <label class="control-label" for="question-instructions"> Οδηγίες </label>
+                        <input type="text" name="question-instructions" id="question-instructions" class="form-control" value="{{ question_data['instructions'] }}" required/>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="question-title"> Ερώτηση </label>
+                        <input type="text" name="question-title" id="question-title" class="form-control" value="{{ question_data['q_title'] }}" required/>
+                        <input type="hidden" name="question_id" value="{{ question_data['id'] }}" required/>
+                        <input type="hidden" name="question-type" value="multi"> 
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="correct-answer"> Σωστή απάντηση </label>
+                        <input type="text" name="correct-answer" class="form-control" value="{{ correct_answer }}" required/> <br/>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="course-title"> Λάθος απάντήσεις </label>
+                        {% for answer in wrong_answers %}
+                        <input type="text" name="wrong-answer[]" class="form-control" value="{{ answer['text'] }}" /> <br/>
+                        {% endfor %}
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="correct-answer"> Μάθημα:  </label>
+                        <select name="course_id" required>
+                            <option value=""> </option>
+                            {% for course in courses %}
+                            <option value="{{ course['id'] }}"> {{ course['title'] }} </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group" style="width:100px;">
+                        <button id="new-course-btn" type="submit" name="submit" class="btn btn-info btn-block">
+                            <span id="new-course-btn-txt" >Υποβολή</span>
+                        </button>
+                    </div>
+                </form>
+                
+                </div>
+            </div>
+            {% elseif function is defined and function == "editbinary" %}
+            <div class="col-sm-12" >
+                <div style="background:white;max-width: 60%; margin: 0 auto;padding:10px; border-radius: 15px;">
+                <div class="form-group">
+                    <p class="alert" id="feedback-message"> </p>
+                </div>
+                <div style="text-align:center">
+                    <h1> Επεξεργασία Άσκησης </h1>
+                </div>
+                <hr/>
+                <form method="POST" role="form" id="edit-binary-question-form" class="form-signin" data-parsley-validate="" style="max-width:80%;">
+                    <div class="form-group">
+                        <label class="control-label" for="question-instructions"> Οδηγίες </label>
+                        <input type="text" name="question-instructions" id="question-instructions" class="form-control" value="{{ question_data['instructions'] }}" required/>
+                        <input type="hidden" name="question-type" value="binary"> 
+                        <input type="hidden" name="question_id" value="{{ question_data['id'] }}" required/>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="question-title"> Ερώτηση </label>
+                        <input type="text" name="question-title" id="question-title" class="form-control" value="{{ question_data['q_title'] }}" required/>
+                    </div>
+                    <div class="form-group" required>
+                        <input type="radio" name="correctness" value="1">Σωστό
+                        <input type="radio" name="correctness" value="0">Λάθος
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="correct-answer"> Μάθημα:  </label>
+                        <select name="course_id" required>
+                            <option value=""></option>
+                            {% for course in courses %}
+                            <option value="{{ course['id'] }}"> {{ course['title'] }} </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group" style="width:100px;">
+                        <button id="new-course-btn" type="submit" name="submit" class="btn btn-info btn-block">
+                            <span id="new-course-btn-txt" >Υποβολή</span>
+                        </button>
+                    </div>
+                </form>
+                
+                </div>
+            </div>
+            
+            {% endif %}
+        </div>
+    </div>
+    
+    <script src="/js/jquery.js"></script>
+    <script src="/js/parsley/dist/parsley.min.js"></script>
+    <script src="/js/parsley/dist/i18n/el.js"></script>
+    
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js"></script>
+    <!-- Bootstrap select -->
+    <link rel="stylesheet" href="/js/bootstrap-select/dist/css/bootstrap-select.min.css" type="text/css">
+    <script src="/js/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
+    <script src="/js/bootstrap-select/dist/js/i18n/defaults-el_GR.js"></script>
+    <script src="/js/Trumbowyg-master/dist/trumbowyg.min.js"></script>
+    <script src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            
+            {% if error is defined and error == true %}
+                $("#feedback-message").show();
+                $("#feedback-message").html('<i class="fa fa-exclamation-triangle" aria-hidden="true" style="display:hidden"></i> {{ error }}');
+                $("#feedback-message").addClass("alert-danger");
+            {% elseif error is defined and error == false %}
+                $("#feedback-message").show();
+                $("#feedback-message").html('<i class="fa fa-thumbs-up" aria-hidden="true"></i> {{ error }}');
+                $("#feedback-message").addClass("alert-success");
+            {% endif %}
+        
+            {% if function is defined and function == "list" %}
+            $('#course-list').DataTable({
+                "columnDefs": [
+                    { "type": "timeStamp", "targets": 2 }
+                  ]
+            });
+            {% endif %}
+            
+            {% if function is defined and function == "new" %}
+                var form_id = '#new-question-form';
+            {% elseif function is defined and function == "edit" %}
+                var form_id = '#edit-question-form';
+            {% elseif function is defined and function == "newbinary" %}
+                var form_id = '#new-binary-question-form';
+            {% elseif function is defined and function == "editbinary" %}
+                var form_id = '#edit-binary-question-form';
+            {% endif %}
+            
+            {% if function is defined and function != "list" %}
+            $(function () {
+                $(form_id).parsley().on('field:validated', function() {
+                var ok = $('.parsley-error').length === 0;
+                $('.bs-callout-info').toggleClass('hidden', !ok);
+                $('.bs-callout-warning').toggleClass('hidden', ok);
+              })
+              .on('#login-form:submit', function() {
+                return false; 
+              });
+            });
+            {% endif %}
+            
+            $("#new-question-form").submit(function(e){
+                var url = "/test/new";
+                $.ajax({
+                   type: "POST",
+                   url: url,
+                   dataType: "json",
+                   data: $("#new-question-form").serialize(),
+                   success: function(data)
+                   {
+                       if (data.error == true){
+                           alert("Error");
+                       }else{
+                           alert("Success");
+                       }
+                   }
+                 });
+                 e.preventDefault(); // avoid to execute the actual submit of the form.
+            });
+
+            $("#edit-question-form").submit(function(e){
+                $("#feedback-message").hide();
+                $("#feedback-message").html();
+                $("#feedback-message").removeClass('alert-danger');
+                $("#feedback-message").removeClass('alert-success');
+                $("#feedback-message").removeClass('alert-warning');
+                var url = "/test/update";
+                $.ajax({
+                   type: "POST",
+                   url: url,
+                   dataType: "json",
+                   data: $("#edit-question-form").serialize(),
+                   success: function(data)
+                   {
+                       if (data.error == true){
+                           $("#feedback-message").show();
+                           $("#feedback-message").html('<i class="fa fa-exclamation-triangle" aria-hidden="true"></i> '+data.message);
+                           $("#feedback-message").addClass("alert-danger");
+                       }else{
+                           $("#feedback-message").show();
+                           $("#feedback-message").html('<i class="fa fa-thumbs-up" aria-hidden="true"></i> '+data.message);
+                           $("#feedback-message").addClass("alert-success");
+                       }
+                   }
+                 });
+                 e.preventDefault(); // avoid to execute the actual submit of the form.
+            });
+            
+            $("#new-binary-question-form").submit(function(e){
+                $("#feedback-message").hide();
+                $("#feedback-message").html();
+                $("#feedback-message").removeClass('alert-danger');
+                $("#feedback-message").removeClass('alert-success');
+                $("#feedback-message").removeClass('alert-warning');
+                var url = "/test/new";
+                $.ajax({
+                   type: "POST",
+                   url: url,
+                   dataType: "json",
+                   data: $("#new-binary-question-form").serialize(),
+                   success: function(data)
+                   {
+                       if (data.error == true){
+                           $("#feedback-message").show();
+                           $("#feedback-message").html('<i class="fa fa-exclamation-triangle" aria-hidden="true"></i> '+data.message);
+                           $("#feedback-message").addClass("alert-danger");
+                       }else{
+                           $("#feedback-message").show();
+                           $("#feedback-message").html('<i class="fa fa-thumbs-up" aria-hidden="true"></i> '+data.message);
+                           $("#feedback-message").addClass("alert-success");
+                       }
+                   }
+                 });
+                 e.preventDefault(); // avoid to execute the actual submit of the form.
+            });
+            
+            $("#edit-binary-question-form").submit(function(e){
+                $("#feedback-message").hide();
+                $("#feedback-message").html();
+                $("#feedback-message").removeClass('alert-danger');
+                $("#feedback-message").removeClass('alert-success');
+                $("#feedback-message").removeClass('alert-warning');
+                var url = "/test/update";
+                $.ajax({
+                   type: "POST",
+                   url: url,
+                   dataType: "json",
+                   data: $("#edit-binary-question-form").serialize(),
+                   success: function(data)
+                   {
+                       if (data.error == true){
+                           $("#feedback-message").show();
+                           $("#feedback-message").html('<i class="fa fa-exclamation-triangle" aria-hidden="true"></i> '+data.message);
+                           $("#feedback-message").addClass("alert-danger");
+                       }else{
+                           $("#feedback-message").show();
+                           $("#feedback-message").html('<i class="fa fa-thumbs-up" aria-hidden="true"></i> '+data.message);
+                           $("#feedback-message").addClass("alert-success");
+                       }
+                   }
+                 });
+                 e.preventDefault(); // avoid to execute the actual submit of the form.
+            });
+
+        });
+        
+            
+            
+        $(function() {
+              $('#edit-lesson').trumbowyg();
+          });
+        
+    </script>
+
+</body>
+
+</html>

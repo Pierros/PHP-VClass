@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html class="full" lang="en">
+<!-- Make sure the <html> tag is set to the .full CSS class. Change the background image in the full.css file. -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Πλατφορμα Διδασκαλίας Αρχαίων Ελληνικων</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="/css/bootstrap.css" rel="stylesheet" type="text/css">
+
+    <!-- Custom CSS -->
+    <link href="/css/full.css" rel="stylesheet" type="text/css">
+    <link href="/js/parsley/src/parsley.css" rel="stylesheet" type="text/css">
+ 
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.7/es5-shim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.7/es5-sham.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/json3/3.3.2/json3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/es6-shim/0.34.2/es6-shim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/es6-shim/0.34.2/es6-sham.min.js"></script>
+    <script src="/js/moment-with-locales.min.js"></script>
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+    <!-- Include Font Awesome. -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="/js/Trumbowyg-master/dist/ui/trumbowyg.min.css">
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">Εκμάθηση Αρχαίων Ελληνικών</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="#">{{ username }}</a>
+                    </li>
+                    <li>
+                        <a href="/student">Μαθήματα</a>
+                    </li>
+                    <li>
+                        <a href="/logout">Έξοδος</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Put your page content here! -->
+    <div class="body-container">
+        <div class="row" style="top:10%">
+            {% if qtype is defined and qtype == "binary" %}
+            <div class="col-sm-12" style="margin-bottom: 30px;">
+                <div style="background:white; width: 75%; margin: 0 auto;padding:10px; border-radius: 15px;">                    
+                    <div style="text-align:center">
+                        <h1> {{ lesson }} </h1>
+                        <h3> Ασκήσεις Σωστού/Λάθους</h3>
+                    </div>
+                    <hr/>
+                    <div id = "course_text" style="width: 80%; margin: 0 auto;">
+                        <form method="POST" action="/student/course/correct/{{lesson_id}}" role="form" id="question-form" style="max-width:80%" class="form-signin" data-parsley-validate="" >
+                        {{ instructions }}
+                        <div class="form-group">
+                            <p class="alert" id="feedback-message" style="display:hidden"> </p>
+                        </div>
+                        <input type="hidden" value="binary" name="qtype">
+                        {% for key,question in questions %}
+                        <div class="col-med-12" style="margin-top:10px">
+                        <span id="answer-{{key}}"></span>
+                        <strong>{{question['title']}}<strong>
+                        <div>
+                            <div class="radio">
+                              <label>
+                              <input type="radio" value=0 name="answer-{{key}}" required>
+                              <span class="cr"><i class="cr-icon fa fa-circle"></i></span>
+                              Λάθος
+                              </label>
+                            </div>
+                            <div class="radio">
+                              <label>
+                              <input type="radio" value=1 name="answer-{{key}}" required>
+                              <span class="cr"><i class="cr-icon fa fa-circle"></i></span>
+                              Σωστό
+                              </label>
+                            </div>
+                        </div>
+                        </div>
+                        <hr/>
+                        {% endfor %}
+                        <button  style="width:140px;" id="new-course-btn" type="submit" name="submit" class="btn btn-info btn-block">
+                            <span id="complete-course-btn" >Υποβολή <i class="fa fa-check" aria-hidden="true"></i></span>
+                        </button>
+                        <div class="form-group" style="float:left; margin-left:10px; display:none" id="nav-buttons">
+                            <button style="float:left;" id="course-text-btn" type="button" class="btn btn-danger"><i class="fa fa-chevron-left" aria-hidden="true"></i> Μάθημα</button>
+                            <button style="float:left; margin-left:10px;" id="courses-list-btn" type="button" class="btn btn-success">Αρχική <i class="fa fa-chevron-right" aria-hidden="true"></i></button>
+                        </div>
+                        </form>
+                    </div>
+                    <hr/>
+                </div>
+            </div>
+            {% else %}
+            <div class="col-sm-12" style="margin-bottom: 30px;">
+                <div style="background:white; width: 75%; margin: 0 auto;padding:10px; border-radius: 15px;">                    
+                    <div style="text-align:center">
+                        <h1> {{ lesson }} </h1>
+                        <h3> Ασκήσεις Πολλαπλής Επιλογής</h3>
+                    </div>
+                    <hr/>
+                    <div id = "course_text" style="width: 80%; margin: 0 auto;">
+                        <form method="POST" action="/student/course/correct/{{lesson_id}}" role="form" id="question-form" style="max-width:80%" class="form-signin" data-parsley-validate="" >
+                        {{ instructions }}
+                        <div class="form-group">
+                            <p class="alert" id="feedback-message" style="display:hidden"> </p>
+                        </div>
+                        
+                        <input type="hidden" value="multi" name="qtype">
+                        {% for key,question in questions %}
+                        <div class="col-med-12" style="margin-top:10px">
+                        <span id="answer-{{key}}"></span><strong>{{question['title']}}<strong>
+                            <div>
+                            {% for anskey, answer in question['answers'] %}
+                            <div class="radio">
+                              <label>
+                              <input type="radio" value="{{ anskey }}" name="answer-{{key}}" required>
+                              <span class="cr"><i class="cr-icon fa fa-circle"></i></span>
+                              {{ answer }}
+                              </label>
+                            </div>
+                            {% endfor %}
+                            </div>
+                        </div>
+                        <hr/>
+                        {% endfor %}
+                        <button  style="width:140px;" id="new-course-btn" type="submit" name="submit" class="btn btn-info btn-block">
+                            <span id="complete-course-btn" >Υποβολή <i class="fa fa-check" aria-hidden="true"></i></span>
+                        </button>
+                        <div class="form-group" style="float:left; margin-left:10px; display:none" id="nav-buttons">
+                            <button style="float:left;" id="course-text-btn" type="button" class="btn btn-danger"><i class="fa fa-chevron-left" aria-hidden="true"></i> Μάθημα</button>
+                            <button style="float:left; margin-left:10px;" id="binary-test-btn" type="button" class="btn btn-success">Ασκήσεις Σωστού/Λάθους <i class="fa fa-chevron-right" aria-hidden="true"></i></button>
+                        </div>
+                        </form>
+                    </div>
+                    <hr/>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        
+    </div>
+    
+    <script src="/js/jquery.js"></script>
+    <script src="/js/parsley/dist/parsley.min.js"></script>
+    <script src="/js/parsley/dist/i18n/el.js"></script>
+    
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js"></script>
+    <!-- Bootstrap select -->
+    <link rel="stylesheet" href="/js/bootstrap-select/dist/css/bootstrap-select.min.css" type="text/css">
+    <script src="/js/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
+    <script src="/js/bootstrap-select/dist/js/i18n/defaults-el_GR.js"></script>
+    <script src="/js/Trumbowyg-master/dist/trumbowyg.min.js"></script>
+    <script src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+    <style>
+    .checkbox label:after, 
+    .radio label:after {
+        content: '';
+        display: table;
+        clear: both;
+    }
+
+    .checkbox .cr,
+    .radio .cr {
+        position: relative;
+        display: inline-block;
+        border: 1px solid #a9a9a9;
+        border-radius: .25em;
+        width: 1.3em;
+        height: 1.3em;
+        float: left;
+        margin-right: .5em;
+    }
+
+    .radio .cr {
+        border-radius: 50%;
+    }
+
+    .checkbox .cr .cr-icon,
+    .radio .cr .cr-icon {
+        position: absolute;
+        font-size: .8em;
+        line-height: 0;
+        top: 50%;
+        left: 20%;
+    }
+
+    .radio .cr .cr-icon {
+        margin-left: 0.04em;
+    }
+
+    .checkbox label input[type="checkbox"],
+    .radio label input[type="radio"] {
+        display: none;
+    }
+
+    .checkbox label input[type="checkbox"] + .cr > .cr-icon,
+    .radio label input[type="radio"] + .cr > .cr-icon {
+        transform: scale(3) rotateZ(-20deg);
+        opacity: 0;
+        transition: all .3s ease-in;
+    }
+
+    .checkbox label input[type="checkbox"]:checked + .cr > .cr-icon,
+    .radio label input[type="radio"]:checked + .cr > .cr-icon {
+        transform: scale(1) rotateZ(0deg);
+        opacity: 1;
+    }
+
+    .checkbox label input[type="checkbox"]:disabled + .cr,
+    .radio label input[type="radio"]:disabled + .cr {
+        opacity: .5;
+    }
+    </style>
+    <script>
+        $(document).ready(function(){
+            
+            $(function () {
+                var form_id = '#question-form';
+                $(form_id).parsley().on('field:validated', function() {
+                var ok = $('.parsley-error').length === 0;
+                $('.bs-callout-info').toggleClass('hidden', !ok);
+                $('.bs-callout-warning').toggleClass('hidden', ok);
+              })
+              .on('#login-form:submit', function() {
+                return false; 
+              });
+            });
+            
+            
+            $("#question-form").submit(function(e){
+                $("#feedback-message").hide();
+                $("#feedback-message").html();
+                $("#feedback-message").removeClass('alert-danger');
+                $("#feedback-message").removeClass('alert-success');
+                $("#feedback-message").removeClass('alert-warning');
+                var url = "/student/course/correct/{{lesson_id}}";
+                $.ajax({
+                   type: "POST",
+                   url: url,
+                   dataType: "json",
+                   data: $("#question-form").serialize(),
+                   success: function(data)
+                   {
+                       if (data.error == true){
+                           $("#feedback-message").show();
+                           $("#feedback-message").html('<i class="fa fa-exclamation-triangle" aria-hidden="true"></i> '+data.message);
+                           $("#feedback-message").addClass("alert-danger");
+                       }else{
+                           $.each(data.result, function(key, item) 
+                            {
+                                if (item == 1){
+                                    $("#"+key).html('<i class="fa fa-thumbs-up" aria-hidden="true" style="color:green"></i> ');
+                                }
+                                else
+                                {
+                                    $("#"+key).html('<i class="fa fa-thumbs-down" aria-hidden="true" style="color:red"></i> ');
+                                }
+                               
+                            });
+                           $("#feedback-message").show();
+                           
+                           if (data.total_score < 0.8){
+                                $("#feedback-message").html('<i class="fa fa-frown-o" aria-hidden="true"></i>  Συνολικό σκορ: '+data.total_score);
+                                $("#feedback-message").addClass("alert-danger");
+                           }
+                           else{
+                                $("#feedback-message").html('<i class="fa fa-smile-o" aria-hidden="true"></i>  Συνολικό σκορ: '+data.total_score);
+                                $("#feedback-message").addClass("alert-success");
+                           }
+                           
+                           $('#new-course-btn').prop('disabled', true);
+                           $('#new-course-btn').hide();
+                           $('#nav-buttons').show();
+                       }
+                   }
+                 });
+                 e.preventDefault(); // avoid to execute the actual submit of the form.
+            });
+            
+            $("#course-text-btn").on('click', function(e){
+                window.location.href = "/student/course/{{lesson_id}}";
+            });
+            
+            $("#binary-test-btn").on('click', function(e){
+                window.location.href = "/student/course/{{lesson_id}}/binary";
+            });
+            
+            $("#courses-list-btn").on('click', function(e){
+                window.location.href = "/student/";
+            });
+        });
+        
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,118 @@
+/*
+ * Start Bootstrap - Full (http://startbootstrap.com/)
+ * Copyright 2013-2016 Start Bootstrap
+ * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap/blob/gh-pages/LICENSE)
+ */
+
+body {
+    margin-top: 50px; /* Required margin for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+}
+
+/* Header Image Background - Change the URL below to your image path (example: ../images/background.jpg) */
+/*
+https://fieldofwork.files.wordpress.com/2014/01/books.jpg
+http://www.greek-language.gr/digitalResources/files/image/history/art/texn_3.1.5_63.jpg
+
+*/
+.full {
+    background: url('../img/background.jpg') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    -o-background-size: cover;
+}
+
+#signup-col{
+	display: none;
+}
+
+#reset-col{
+    display: none;
+}
+/*
+body{
+	font-family: "Sans-Serif";
+}*/
+
+.body-header{
+	z-index: 3;
+	position: absolute;
+	margin-top: 5%;
+}
+
+
+.body-container{
+	position: absolute;
+	width: 100%;
+	height: 90%;
+	z-index: 2;
+	/*top: 50%;
+	left: 50%;
+	margin: -100px 0 0 -150px;*/
+}
+
+.body-container .row{
+	margin: 0 auto;
+	width: 100%;
+	min-height: 100px;
+	position: absolute;
+	z-index: 3;
+	top: 30%;
+}
+
+.form-signin {
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
+  background:rgba(255,255,255,0.9);
+  border-radius: 15px;
+}
+
+.form-signup .row{
+  position: relative;
+  max-width: 660px;
+  padding: 15px;
+  margin: 0 auto;
+  background:rgba(255,255,255,0.9);
+  border-radius: 15px;
+}
+
+.form-signin .form-signin-heading,
+.form-signin .checkbox{
+  margin-bottom: 10px;
+}
+
+.form-signin .checkbox .form-signup .row{
+  font-weight: normal;
+}
+
+.form-signin .form-control .form-signup .row{
+  position: relative;
+  height: auto;
+  -webkit-box-sizing: border-box;
+	 -moz-box-sizing: border-box;
+		  box-sizing: border-box;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.form-signin .form-control:focus .form-signup .row{
+  z-index: 2;
+}
+
+.form-signin input{
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.form-signup #signup-btn{
+  width: 10em;
+  margin: 0 auto;
+}

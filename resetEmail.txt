@@ -1,0 +1,9 @@
+Dear $firstName $lastName,
+
+Please visit the following link to reset your password:
+
+http://ec2-54-197-15-89.compute-1.amazonaws.com/reset/new?x=$resethash&y=$userid
+
+
+Kind regards,
+Petros Anaipakos
